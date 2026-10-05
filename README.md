@@ -30,6 +30,14 @@ Beginner Boss Challenges
 
 The 30 questions are intentionally kept at beginner level while gradually increasing the amount of analytical thinking required.
 
+### 📈 Current Progress
+
+**Beginner CTE Progress: 2 / 30 questions completed** 🎯
+
+- ✅ Question 1 — Find High-Value Orders
+- ✅ Question 2 — Find Completed Orders
+- ⬜ Questions 3–30 — Not yet completed
+
 ---
 
 ## 🗄️ SQL Environment
@@ -195,6 +203,29 @@ Return:
 
 **Goal:** Learn the basic `WITH cte_name AS (...)` structure.
 
+### ✅ Solution — Question 1
+
+```sql
+WITH high_value_orders AS (
+    SELECT
+        order_id,
+        customer_id,
+        order_date,
+        amount
+    FROM orders
+    WHERE amount > 50000
+)
+SELECT *
+FROM high_value_orders;
+```
+
+**Concepts practiced:**
+- Basic CTE structure
+- `WITH ... AS (...)`
+- Filtering with `WHERE`
+- Selecting data from a CTE
+- Descriptive CTE naming
+
 ---
 
 ### 2. Find Completed Orders
@@ -213,6 +244,28 @@ Return:
 - `customer_id`
 - `amount`
 - `status`
+
+### ✅ Solution — Question 2
+
+```sql
+WITH completed_orders AS (
+    SELECT
+        order_id,
+        customer_id,
+        amount,
+        status
+    FROM orders
+    WHERE status = 'Completed'
+)
+SELECT *
+FROM completed_orders;
+```
+
+**Concepts practiced:**
+- Basic CTE structure
+- Filtering rows inside a CTE
+- Querying the CTE in the final `SELECT`
+- Descriptive CTE naming
 
 ---
 
@@ -1087,6 +1140,17 @@ Advanced Analytics SQL
 ```
 
 The objective is to develop the habit of thinking about SQL as a **series of analytical steps**, rather than trying to write one giant query.
+
+## 🏁 Current Completion Status
+
+```text
+🟢 Beginner CTE
+├── 01. Find High-Value Orders      ✅
+├── 02. Find Completed Orders       ✅
+└── 03–30                           ⬜
+```
+
+**Progress: 2 / 30 completed**
 
 ---
 
