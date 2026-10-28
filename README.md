@@ -32,11 +32,14 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 2 / 30 questions completed** 🎯
+**Beginner CTE Progress: 5 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
-- ⬜ Questions 3–30 — Not yet completed
+- ✅ Question 3 — Find Customers From Karachi
+- ✅ Question 4 — Find Expensive Products
+- ✅ Question 5 — Find Recent Customers
+- ⬜ Questions 6–30 — Not yet completed
 
 ---
 
@@ -220,6 +223,7 @@ FROM high_value_orders;
 ```
 
 **Concepts practiced:**
+
 - Basic CTE structure
 - `WITH ... AS (...)`
 - Filtering with `WHERE`
@@ -262,6 +266,7 @@ FROM completed_orders;
 ```
 
 **Concepts practiced:**
+
 - Basic CTE structure
 - Filtering rows inside a CTE
 - Querying the CTE in the final `SELECT`
@@ -286,6 +291,28 @@ Return:
 - `city`
 - `signup_date`
 
+### ✅ Solution — Question 3
+
+```sql
+WITH customers_in_karachi AS (
+    SELECT
+        customer_id,
+        customer_name,
+        city,
+        signup_date
+    FROM customers
+    WHERE city = 'Karachi'
+)
+SELECT *
+FROM customers_in_karachi;
+```
+
+**Concepts practiced:**
+
+- Filtering text values with `WHERE`
+- Selecting specific columns inside a CTE
+- Using a descriptive CTE name for a filtered customer dataset
+
 ---
 
 ### 4. Find Expensive Products
@@ -300,6 +327,29 @@ Return:
 - `product_name`
 - `category`
 - `price`
+
+### ✅ Solution — Question 4
+
+```sql
+WITH premium_products AS (
+    SELECT
+        product_id,
+        product_name,
+        category,
+        price
+    FROM products
+    WHERE price >= 10000
+)
+SELECT *
+FROM premium_products;
+```
+
+**Concepts practiced:**
+
+- Filtering numeric values with `WHERE`
+- Using a CTE to create a named subset of the product catalog
+
+**Threshold note:** The implemented condition `price >= 10000` includes products priced exactly at `10,000`. To interpret “above `10,000`” strictly, use `price > 10000` in the SQL file.
 
 ---
 
@@ -318,6 +368,27 @@ Return:
 - `customer_id`
 - `customer_name`
 - `signup_date`
+
+### ✅ Solution — Question 5
+
+```sql
+WITH recent_customers AS (
+    SELECT
+        customer_id,
+        customer_name,
+        signup_date
+    FROM customers
+    WHERE signup_date > '2025-01-01'
+)
+SELECT *
+FROM recent_customers;
+```
+
+**Concepts practiced:**
+
+- Filtering date values with `WHERE`
+- Applying a strict date comparison with `>`
+- Naming and querying a CTE for recent signups
 
 ---
 
@@ -1146,11 +1217,14 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ```text
 🟢 Beginner CTE
 ├── 01. Find High-Value Orders      ✅
-├── 02. Find Completed Orders       ✅
-└── 03–30                           ⬜
+├── 02. Find Completed Orders      ✅
+├── 03. Karachi Customers          ✅
+├── 04. Expensive Products         ✅
+├── 05. Recent Customers           ✅
+└── 06–30                          ⬜
 ```
 
-**Progress: 2 / 30 completed**
+**Progress: 5 / 30 completed**
 
 ---
 
