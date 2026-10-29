@@ -32,14 +32,16 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 5 / 30 questions completed** 🎯
+**Beginner CTE Progress: 7 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
 - ✅ Question 3 — Find Customers From Karachi
 - ✅ Question 4 — Find Expensive Products
 - ✅ Question 5 — Find Recent Customers
-- ⬜ Questions 6–30 — Not yet completed
+- ✅ Question 6 — Calculate Total Revenue
+- ✅ Question 7 — Calculate Revenue by Customer
+- ⬜ Questions 8–30 — Not yet completed
 
 ---
 
@@ -418,6 +420,27 @@ SUM(amount)
 CTE
 ```
 
+### ✅ Solution — Question 6
+
+```sql
+WITH completed_orders AS (
+    SELECT
+        amount,
+        status
+    FROM orders
+    WHERE status = 'Completed'
+)
+SELECT SUM(amount) AS total_revenue
+FROM completed_orders;
+```
+
+**Concepts practiced:**
+
+- Filtering completed orders inside a CTE
+- Using `SUM()` to calculate company-wide revenue
+- Returning a single aggregate result without `GROUP BY`
+- Assigning an alias with `AS total_revenue`
+
 ---
 
 ### 7. Calculate Revenue by Customer
@@ -430,6 +453,32 @@ Return:
 
 - `customer_id`
 - `total_spending`
+
+### ✅ Solution — Question 7
+
+```sql
+WITH completed_customer_order AS (
+    SELECT
+        c.customer_id,
+        o.amount
+    FROM customers AS c
+    JOIN orders AS o
+        ON c.customer_id = o.customer_id
+    WHERE o.status = 'Completed'
+)
+SELECT
+    customer_id,
+    SUM(amount) AS total_spending
+FROM completed_customer_order
+GROUP BY customer_id;
+```
+
+**Concepts practiced:**
+
+- Joining customers to their orders
+- Filtering completed orders inside a CTE
+- Using `SUM()` to calculate spending per customer
+- Grouping by `customer_id` to return one total per customer
 
 ---
 
@@ -1221,10 +1270,12 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 03. Karachi Customers          ✅
 ├── 04. Expensive Products         ✅
 ├── 05. Recent Customers           ✅
-└── 06–30                          ⬜
+├── 06. Calculate Total Revenue    ✅
+├── 07. Revenue by Customer        ✅
+└── 08–30                          ⬜
 ```
 
-**Progress: 5 / 30 completed**
+**Progress: 7 / 30 completed**
 
 ---
 
