@@ -45,3 +45,27 @@ SELECT customer_id, SUM(amount) AS total_spending
 FROM completed_customer_order
 GROUP BY
     customer_id;
+
+--8. Find Customers Spending More Than 100,000
+--First create a CTE containing each customer's total spending.
+--Then use the CTE to find customers whose spending is greater than:
+--	100000
+--Return:
+--	customer_id
+--	total_spending
+--Important: Don't calculate the SUM() again in the outer query.
+
+WITH
+    customers_total_spending AS (
+        SELECT c.customer_id, SUM(o.amount) AS total_spending
+        FROM customers c
+            JOIN orders o ON c.customer_id = o.customer_id
+        WHERE
+            o.status = 'Completed'
+        GROUP BY
+            c.customer_id
+    )
+SELECT *
+FROM customers_total_spending
+WHERE
+    total_spending > 100000

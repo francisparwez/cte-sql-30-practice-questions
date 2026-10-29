@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 7 / 30 questions completed** 🎯
+**Beginner CTE Progress: 8 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -41,7 +41,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 5 — Find Recent Customers
 - ✅ Question 6 — Calculate Total Revenue
 - ✅ Question 7 — Calculate Revenue by Customer
-- ⬜ Questions 8–30 — Not yet completed
+- ✅ Question 8 — Find Customers Spending More Than 100,000
+- ⬜ Questions 9–30 — Not yet completed
 
 ---
 
@@ -498,6 +499,33 @@ Return:
 - `total_spending`
 
 **Important:** Do not calculate the `SUM()` again in the outer query.
+
+### ✅ Solution — Question 8
+
+```sql
+WITH customers_total_spending AS (
+    SELECT
+        c.customer_id,
+        SUM(o.amount) AS total_spending
+    FROM customers AS c
+    JOIN orders AS o
+        ON c.customer_id = o.customer_id
+    WHERE o.status = 'Completed'
+    GROUP BY c.customer_id
+)
+SELECT *
+FROM customers_total_spending
+WHERE total_spending > 100000;
+```
+
+**Concepts practiced:**
+
+- Joining customers to their orders
+- Filtering completed orders before aggregation
+- Calculating customer-level totals with `SUM()`
+- Grouping by `customer_id`
+- Filtering an aggregated result in the outer query
+- Reusing the CTE's `total_spending` column without recalculating `SUM()`
 
 ---
 
@@ -1272,10 +1300,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 05. Recent Customers           ✅
 ├── 06. Calculate Total Revenue    ✅
 ├── 07. Revenue by Customer        ✅
-└── 08–30                          ⬜
+├── 08. High-Spending Customers     ✅
+└── 09–30                          ⬜
 ```
 
-**Progress: 7 / 30 completed**
+**Progress: 8 / 30 completed**
 
 ---
 
