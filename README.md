@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 8 / 30 questions completed** 🎯
+**Beginner CTE Progress: 10 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -42,7 +42,9 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 6 — Calculate Total Revenue
 - ✅ Question 7 — Calculate Revenue by Customer
 - ✅ Question 8 — Find Customers Spending More Than 100,000
-- ⬜ Questions 9–30 — Not yet completed
+- ✅ Question 9 — Calculate Average Order Amount
+- ✅ Question 10 — Find Customers With More Than 3 Orders
+- ⬜ Questions 11–30 — Not yet completed
 
 ---
 
@@ -539,6 +541,26 @@ Return:
 
 - `average_order_amount`
 
+### ✅ Solution — Question 9
+
+```sql
+WITH completed_orders AS (
+    SELECT amount
+    FROM orders
+    WHERE status = 'Completed'
+)
+SELECT
+    CAST(AVG(amount) AS DECIMAL(10, 2)) AS average_order_amount
+FROM completed_orders;
+```
+
+**Concepts practiced:**
+
+- Filtering completed orders inside a CTE
+- Using `AVG()` to calculate the average order amount
+- Casting the aggregate result to `DECIMAL(10, 2)`
+- Using the CTE as the input to the outer query
+
 ---
 
 ### 10. Find Customers With More Than 3 Orders
@@ -555,6 +577,33 @@ Return:
 
 - `customer_id`
 - `order_count`
+
+### ✅ Solution — Question 10
+
+```sql
+WITH customer_order_counts AS (
+    SELECT
+        customer_id,
+        COUNT(order_id) AS total_orders
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT
+    customer_id,
+    total_orders
+FROM customer_order_counts
+WHERE total_orders > 3;
+```
+
+**Concepts practiced:**
+
+- Counting orders with `COUNT()`
+- Grouping orders by `customer_id`
+- Creating a customer-level order count in a CTE
+- Filtering the aggregated results in the outer query
+- Reusing the CTE's order-count column without recalculating `COUNT()`
+
+**Output naming note:** The question requests `order_count`, but the implemented SQL uses `total_orders` as the column alias. Rename the alias in the SQL file if you want the output column to match the requested name exactly.
 
 ---
 
@@ -1301,10 +1350,12 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 06. Calculate Total Revenue    ✅
 ├── 07. Revenue by Customer        ✅
 ├── 08. High-Spending Customers     ✅
-└── 09–30                          ⬜
+├── 09. Average Order Amount        ✅
+├── 10. Customers With >3 Orders    ✅
+└── 11–30                          ⬜
 ```
 
-**Progress: 8 / 30 completed**
+**Progress: 10 / 30 completed**
 
 ---
 

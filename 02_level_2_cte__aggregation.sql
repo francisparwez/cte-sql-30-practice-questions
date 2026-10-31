@@ -69,3 +69,39 @@ SELECT *
 FROM customers_total_spending
 WHERE
     total_spending > 100000
+
+-- 9. Calculate Average Order Amount
+-- Create a CTE containing completed orders.
+-- Then calculate the average order amount from that CTE.
+-- Return:
+--     average_order_amount
+-- This teaches you how one CTE can become the input to another query.
+
+WITH
+    completed_orders AS (
+        SELECT amount
+        FROM orders
+        WHERE
+            status = 'Completed'
+    )
+SELECT CAST(AVG(amount) AS DECIMAL(10, 2)) AS average_order_amount
+FROM completed_orders;
+
+-- 10. Find Customers With More Than 3 Orders
+-- Create a CTE that counts orders for each customer.
+-- Then return customers who have made more than 3 orders.
+-- Return:
+--	customer_id
+--	order_count
+
+WITH
+    customer_order_counts AS (
+        SELECT customer_id, COUNT(order_id) AS total_orders
+        FROM orders
+        GROUP BY
+            customer_id
+    )
+SELECT customer_id, total_orders
+FROM customer_order_counts
+WHERE
+    total_orders > 3;
