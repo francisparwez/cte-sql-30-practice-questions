@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 10 / 30 questions completed** 🎯
+**Beginner CTE Progress: 11 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -44,7 +44,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 8 — Find Customers Spending More Than 100,000
 - ✅ Question 9 — Calculate Average Order Amount
 - ✅ Question 10 — Find Customers With More Than 3 Orders
-- ⬜ Questions 11–30 — Not yet completed
+- ✅ Question 11 — Customer Spending Report
+- ⬜ Questions 12–30 — Not yet completed
 
 ---
 
@@ -637,6 +638,38 @@ JOIN customers
    ↓
 customer report
 ```
+
+### ✅ Solution — Question 11
+
+```sql
+WITH customers_spending AS (
+    SELECT
+        c.customer_id,
+        SUM(o.amount) AS total_spending
+    FROM customers AS c
+    JOIN orders AS o
+        ON c.customer_id = o.customer_id
+    WHERE o.status = 'Completed'
+    GROUP BY c.customer_id
+)
+SELECT
+    cs.customer_id,
+    c.customer_name,
+    c.city,
+    total_spending
+FROM customers_spending AS cs
+JOIN customers AS c
+    ON cs.customer_id = c.customer_id;
+```
+
+**Concepts practiced:**
+
+- Joining customers to their orders inside a CTE
+- Filtering completed orders before aggregation
+- Calculating customer-level spending with `SUM()`
+- Grouping by `customer_id` to produce one spending total per customer
+- Joining the aggregated CTE back to `customers`
+- Separating metric calculation from the final customer report
 
 ---
 
@@ -1352,10 +1385,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 08. High-Spending Customers     ✅
 ├── 09. Average Order Amount        ✅
 ├── 10. Customers With >3 Orders    ✅
-└── 11–30                          ⬜
+├── 11. Customer Spending Report    ✅
+└── 12–30                          ⬜
 ```
 
-**Progress: 10 / 30 completed**
+**Progress: 11 / 30 completed**
 
 ---
 
