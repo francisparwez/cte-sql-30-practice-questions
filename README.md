@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 11 / 30 questions completed** 🎯
+**Beginner CTE Progress: 12 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -45,7 +45,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 9 — Calculate Average Order Amount
 - ✅ Question 10 — Find Customers With More Than 3 Orders
 - ✅ Question 11 — Customer Spending Report
-- ⬜ Questions 12–30 — Not yet completed
+- ✅ Question 12 — High-Value Customer Report
+- ⬜ Questions 13–30 — Not yet completed
 
 ---
 
@@ -689,6 +690,40 @@ Return:
 - `customer_name`
 - `city`
 - `total_spending`
+
+### ✅ Solution — Question 12
+
+```sql
+WITH high_valued_customer AS (
+    SELECT
+        c.customer_id,
+        SUM(o.amount) AS total_spending
+    FROM customers AS c
+    JOIN orders AS o
+        ON c.customer_id = o.customer_id
+    WHERE o.status = 'Completed'
+    GROUP BY c.customer_id
+    HAVING SUM(o.amount) > 100000
+)
+SELECT
+    h_v_c.customer_id,
+    c.customer_name,
+    c.city,
+    h_v_c.total_spending
+FROM high_valued_customer AS h_v_c
+JOIN customers AS c
+    ON h_v_c.customer_id = c.customer_id;
+```
+
+**Concepts practiced:**
+
+- Joining customers to their orders inside a CTE
+- Filtering completed orders before aggregation
+- Calculating customer-level spending with `SUM()`
+- Grouping by `customer_id` to produce one spending total per customer
+- Filtering aggregated customer totals with `HAVING`
+- Joining the qualifying CTE results back to `customers`
+- Separating customer metric calculation from the final report
 
 ---
 
@@ -1386,10 +1421,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 09. Average Order Amount        ✅
 ├── 10. Customers With >3 Orders    ✅
 ├── 11. Customer Spending Report    ✅
-└── 12–30                          ⬜
+├── 12. High-Value Customer Report  ✅
+└── 13–30                          ⬜
 ```
 
-**Progress: 11 / 30 completed**
+**Progress: 12 / 30 completed**
 
 ---
 
