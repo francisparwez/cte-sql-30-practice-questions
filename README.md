@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 12 / 30 questions completed** 🎯
+**Beginner CTE Progress: 13 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -46,7 +46,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 10 — Find Customers With More Than 3 Orders
 - ✅ Question 11 — Customer Spending Report
 - ✅ Question 12 — High-Value Customer Report
-- ⬜ Questions 13–30 — Not yet completed
+- ✅ Question 13 — Customer Order Count Report
+- ⬜ Questions 14–30 — Not yet completed
 
 ---
 
@@ -739,6 +740,34 @@ Return:
 - `customer_name`
 - `order_count`
 
+### ✅ Solution — Question 13
+
+```sql
+WITH customer_order_count AS (
+    SELECT
+        customer_id,
+        COUNT(order_id) AS order_count
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT
+    c_o_c.customer_id,
+    c.customer_name,
+    c_o_c.order_count
+FROM customer_order_count AS c_o_c
+JOIN customers AS c
+    ON c_o_c.customer_id = c.customer_id;
+```
+
+**Concepts practiced:**
+
+- Counting orders with `COUNT()`
+- Grouping orders by `customer_id`
+- Creating a customer-level order count in a CTE
+- Joining the aggregated CTE with `customers`
+- Retrieving customer names in the outer query
+- Counting all orders without filtering by status
+
 ---
 
 ### 14. Customers With Completed Orders
@@ -1422,10 +1451,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 10. Customers With >3 Orders    ✅
 ├── 11. Customer Spending Report    ✅
 ├── 12. High-Value Customer Report  ✅
-└── 13–30                          ⬜
+├── 13. Customer Order Count Report ✅
+└── 14–30                          ⬜
 ```
 
-**Progress: 12 / 30 completed**
+**Progress: 13 / 30 completed**
 
 ---
 

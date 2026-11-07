@@ -61,3 +61,26 @@ SELECT h_v_c.customer_id, c.customer_name, c.city, h_v_c.total_spending
 FROM
     high_valued_customer h_v_c
     JOIN customers c ON h_v_c.customer_id = c.customer_id;
+
+-- 13. Customer Order Count Report
+-- Create a CTE that calculates the number of orders for each customer.
+-- Join it with customers .
+-- Return:
+--     customer_id
+--     customer_name
+--     order_count
+
+USE CTE_Practice_DB;
+GO
+
+WITH
+    customer_order_count AS (
+        SELECT customer_id, COUNT(order_id) AS order_count
+        FROM orders o
+        GROUP BY
+            customer_id
+    )
+SELECT c_o_c.customer_id, c.customer_name, c_o_c.order_count
+FROM
+    customer_order_count c_o_c
+    JOIN customers c ON c_o_c.customer_id = c.customer_id;
