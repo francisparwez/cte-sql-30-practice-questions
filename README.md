@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 13 / 30 questions completed** 🎯
+**Beginner CTE Progress: 14 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -47,7 +47,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 11 — Customer Spending Report
 - ✅ Question 12 — High-Value Customer Report
 - ✅ Question 13 — Customer Order Count Report
-- ⬜ Questions 14–30 — Not yet completed
+- ✅ Question 14 — Customers With Completed Orders
+- ⬜ Questions 15–30 — Not yet completed
 
 ---
 
@@ -786,6 +787,35 @@ Return:
 
 ---
 
+### ✅ Solution — Question 14
+
+```sql
+WITH completed_orders AS (
+    SELECT DISTINCT
+        customer_id
+    FROM orders
+    WHERE status = 'Completed'
+)
+SELECT
+    c.customer_id,
+    c.customer_name,
+    c.city
+FROM customers AS c
+JOIN completed_orders AS co
+    ON c.customer_id = co.customer_id;
+```
+
+**Concepts practiced:**
+
+- Creating a CTE containing customer IDs from completed orders
+- Filtering orders by status with `WHERE`
+- Using `DISTINCT` to return each qualifying customer only once
+- Joining the CTE with `customers` using `INNER JOIN`
+- Returning only the requested customer details
+- Excluding customers without at least one completed order
+
+---
+
 ### 15. City Revenue Report
 
 Create a CTE that calculates total completed-order revenue for each city.
@@ -1452,10 +1482,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 11. Customer Spending Report    ✅
 ├── 12. High-Value Customer Report  ✅
 ├── 13. Customer Order Count Report ✅
-└── 14–30                          ⬜
+├── 14. Customers With Completed Orders ✅
+└── 15–30                          ⬜
 ```
 
-**Progress: 13 / 30 completed**
+**Progress: 14 / 30 completed**
 
 ---
 

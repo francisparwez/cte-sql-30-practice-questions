@@ -84,3 +84,28 @@ SELECT c_o_c.customer_id, c.customer_name, c_o_c.order_count
 FROM
     customer_order_count c_o_c
     JOIN customers c ON c_o_c.customer_id = c.customer_id;
+
+-- 14. Customers With Completed Orders
+-- Create a CTE containing customers who have completed orders.
+-- Then join that result to customers .
+-- Return:
+--     customer_id
+--     customer_name
+--     city
+-- Only customers with at least one completed order should appear.
+
+USE CTE_Practice_DB;
+GO
+
+WITH
+    completed_orders AS (
+        SELECT DISTINCT
+            customer_id
+        FROM orders
+        WHERE
+            status = 'Completed'
+    )
+SELECT c.customer_id, c.customer_name, c.city
+FROM
+    customers c
+    JOIN completed_orders co ON c.customer_id = co.customer_id;
