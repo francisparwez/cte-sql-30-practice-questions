@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 14 / 30 questions completed** 🎯
+**Beginner CTE Progress: 15 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -48,7 +48,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 12 — High-Value Customer Report
 - ✅ Question 13 — Customer Order Count Report
 - ✅ Question 14 — Customers With Completed Orders
-- ⬜ Questions 15–30 — Not yet completed
+- ✅ Question 15 — City Revenue Report
+- ⬜ Questions 16–30 — Not yet completed
 
 ---
 
@@ -837,6 +838,36 @@ Return:
 
 ---
 
+### ✅ Solution — Question 15
+
+```sql
+WITH completed_order AS (
+    SELECT
+        c.city,
+        o.amount
+    FROM customers AS c
+    JOIN orders AS o
+        ON c.customer_id = o.customer_id
+    WHERE o.status = 'Completed'
+)
+SELECT
+    city,
+    SUM(amount) AS total_revenue
+FROM completed_order
+GROUP BY city;
+```
+
+**Concepts practiced:**
+
+- Joining `customers` and `orders` using `customer_id`
+- Filtering completed orders inside a CTE
+- Selecting city and order amount for the intermediate dataset
+- Using `SUM()` to calculate total revenue
+- Grouping by `city` to produce one revenue total per city
+- Separating row-level preparation from city-level aggregation
+
+---
+
 # 🟢 Level 4 --- Multiple CTEs
 
 Now start using more than one CTE.
@@ -1483,10 +1514,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 12. High-Value Customer Report  ✅
 ├── 13. Customer Order Count Report ✅
 ├── 14. Customers With Completed Orders ✅
-└── 15–30                          ⬜
+├── 15. City Revenue Report         ✅
+└── 16–30                          ⬜
 ```
 
-**Progress: 14 / 30 completed**
+**Progress: 15 / 30 completed**
 
 ---
 

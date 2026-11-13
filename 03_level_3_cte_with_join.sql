@@ -109,3 +109,30 @@ SELECT c.customer_id, c.customer_name, c.city
 FROM
     customers c
     JOIN completed_orders co ON c.customer_id = co.customer_id;
+
+-- 15. City Revenue Report
+-- Create a CTE that calculates total completed-order revenue for each city.
+-- You'll need to join:
+--     customers
+--     +
+--     orders
+-- inside the CTE.
+-- Return:
+--     city
+--     total_revenue
+
+USE CTE_Practice_DB;
+GO
+
+WITH
+    completed_order AS (
+        SELECT c.city, o.amount
+        FROM customers c
+            JOIN orders o ON c.customer_id = o.customer_id
+        WHERE
+            o.status = 'Completed'
+    )
+SELECT city, SUM(amount) AS total_revenue
+FROM completed_order
+GROUP BY
+    city;
