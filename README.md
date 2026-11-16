@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 15 / 30 questions completed** 🎯
+**Beginner CTE Progress: 16 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -49,7 +49,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 13 — Customer Order Count Report
 - ✅ Question 14 — Customers With Completed Orders
 - ✅ Question 15 — City Revenue Report
-- ⬜ Questions 16–30 — Not yet completed
+- ✅ Question 16 — High-Value Customer Identification
+- ⬜ Questions 17–30 — Not yet completed
 
 ---
 
@@ -913,6 +914,42 @@ customers
 final report
 ```
 
+### ✅ Solution — Question 16
+
+```sql
+WITH customers_spending AS (
+    SELECT
+        customer_id,
+        SUM(amount) AS total_spending
+    FROM orders
+    GROUP BY customer_id
+),
+high_value_customers AS (
+    SELECT *
+    FROM customers_spending
+    WHERE total_spending > 100000
+)
+SELECT
+    hvc.customer_id,
+    c.customer_name,
+    c.city,
+    hvc.total_spending
+FROM high_value_customers AS hvc
+JOIN customers AS c
+    ON hvc.customer_id = c.customer_id;
+```
+
+**Concepts practiced:**
+
+- Creating multiple CTEs in a single `WITH` clause
+- Calculating total spending per customer with `SUM()`
+- Grouping orders by `customer_id`
+- Referencing the first CTE from a second CTE
+- Filtering aggregated customer spending with `WHERE`
+- Joining the high-value customer CTE with `customers`
+- Returning customer details alongside the calculated spending metric
+- Including all order statuses because the question does not specify a status filter
+
 ---
 
 ### 17. Customer Spending vs Company Average
@@ -1515,10 +1552,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 13. Customer Order Count Report ✅
 ├── 14. Customers With Completed Orders ✅
 ├── 15. City Revenue Report         ✅
-└── 16–30                          ⬜
+├── 16. High-Value Customer Identification ✅
+└── 17–30                          ⬜
 ```
 
-**Progress: 15 / 30 completed**
+**Progress: 16 / 30 completed**
 
 ---
 
