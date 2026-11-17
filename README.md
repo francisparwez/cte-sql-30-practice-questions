@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 16 / 30 questions completed** 🎯
+**Beginner CTE Progress: 17 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -50,7 +50,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 14 — Customers With Completed Orders
 - ✅ Question 15 — City Revenue Report
 - ✅ Question 16 — High-Value Customer Identification
-- ⬜ Questions 17–30 — Not yet completed
+- ✅ Question 17 — Compare Each Order With Customer's Previous Order
+- ⬜ Questions 18–30 — Not yet completed
 
 ---
 
@@ -952,34 +953,90 @@ JOIN customers AS c
 
 ---
 
-### 17. Customer Spending vs Company Average
+### 17. Compare Each Order With Customer's Previous Order
+
+Compare each order with the customer's immediately previous order.
 
 Create:
 
-**CTE 1**
+**CTE 1 — Customer Orders**
 
-Calculate total spending per customer.
+Use `LAG()` to retrieve the previous order amount for each customer.
 
-**CTE 2**
+- Partition by `customer_id`
+- Order by `order_date` and `order_id`
 
-Calculate the average customer spending from CTE 1.
+**CTE 2 — Order Comparison**
 
-Then return customers whose spending is greater than the company-wide average.
+Calculate the percentage change between the current order amount and the previous order amount.
+
+Use:
+
+```text
+(Current Amount - Previous Amount) / Previous Amount × 100
+```
 
 Return:
 
 - `customer_id`
-- `total_spending`
+- `order_id`
+- `order_date`
+- `amount`
+- `previous_amount`
+- `percentage_change`
 
-Pattern:
+The first order for each customer has no previous amount, so its percentage change is `NULL`. A previous amount of zero is also handled safely to avoid division by zero.
 
-```text
-individual metric
-       ↓
-aggregate metric
-       ↓
-comparison
+### ✅ Solution — Question 17
+
+```sql
+WITH customer_orders AS (
+    SELECT
+        customer_id,
+        order_id,
+        order_date,
+        amount,
+        LAG(amount) OVER (
+            PARTITION BY customer_id
+            ORDER BY order_date, order_id
+        ) AS previous_amount
+    FROM orders
+),
+order_comparison AS (
+    SELECT
+        customer_id,
+        order_id,
+        order_date,
+        amount,
+        previous_amount,
+        (
+            (amount - previous_amount) * 100.0
+            / NULLIF(previous_amount, 0)
+        ) AS percentage_change
+    FROM customer_orders
+)
+SELECT
+    customer_id,
+    order_id,
+    order_date,
+    amount,
+    previous_amount,
+    percentage_change
+FROM order_comparison
+ORDER BY customer_id, order_date, order_id;
 ```
+
+**Concepts practiced:**
+
+- Creating multiple CTEs in a single `WITH` clause
+- Using `LAG()` to retrieve the previous order amount
+- Using `PARTITION BY` to perform the comparison separately for each customer
+- Ordering window-function rows by `order_date` and `order_id`
+- Calculating percentage change between consecutive orders
+- Using `100.0` to support decimal arithmetic
+- Using `NULLIF()` to prevent division-by-zero errors
+- Handling the first order for each customer, where no previous amount exists
+- Separating previous-order retrieval from the percentage calculation
 
 ---
 
@@ -1505,7 +1562,7 @@ problems
 
 ---
 
-Window functions are kept separate from this CTE curriculum unless a particular advanced problem genuinely requires them.
+Window functions are kept separate from this CTE curriculum unless a particular problem genuinely requires them, as in Question 17.
 
 ---
 
@@ -1553,19 +1610,23 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 14. Customers With Completed Orders ✅
 ├── 15. City Revenue Report         ✅
 ├── 16. High-Value Customer Identification ✅
-└── 17–30                          ⬜
+├── 17. Compare Orders With Previous Order ✅
+└── 18–30                          ⬜
 ```
 
-**Progress: 16 / 30 completed**
+**Progress: 17 / 30 completed**
 
 ---
 
 # 📁 Project Structure
 
 ```text
-CTE_Practice/
-│
+cte-sql-30-practice-questions/
 ├── 00_schema_design.sql
+├── 01_level_1_understanding_basic_cte.sql
+├── 02_level_2_cte__aggregation.sql
+├── 03_level_3_cte_with_join.sql
+├── 04_level_4_multiple_ctes.sql
 └── README.md
 ```
 
