@@ -104,3 +104,37 @@ ORDER BY
     customer_id,
     order_date,
     order_id;
+
+-- 18. Large Orders vs Average Order
+-- Create:
+--     CTE 1
+--     Get completed orders.
+-- CTE 2
+--     Calculate the average order amount.
+--     Then return orders whose amount is greater than the average.
+-- Return:
+--     order_id
+--     customer_id
+--     amount
+
+USE CTE_Practice_DB;
+
+WITH
+    completed_order AS (
+        SELECT order_id, customer_id, amount
+        FROM orders
+        WHERE
+            status = 'Completed'
+    ),
+    average_order AS (
+        SELECT AVG(
+                CAST(amount AS DECIMAL(18, 2))
+            ) AS avg_amount
+        FROM completed_order
+    )
+SELECT c.order_id, c.customer_id, c.amount
+FROM
+    completed_order c
+    CROSS JOIN average_order a
+WHERE
+    c.amount > a.avg_amount;

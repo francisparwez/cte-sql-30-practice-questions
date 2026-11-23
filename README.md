@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 17 / 30 questions completed** 🎯
+**Beginner CTE Progress: 18 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -51,7 +51,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 15 — City Revenue Report
 - ✅ Question 16 — High-Value Customer Identification
 - ✅ Question 17 — Compare Each Order With Customer's Previous Order
-- ⬜ Questions 18–30 — Not yet completed
+- ✅ Question 18 — Large Orders vs Average Order
+- ⬜ Questions 19–30 — Not yet completed
 
 ---
 
@@ -1050,15 +1051,50 @@ Get completed orders.
 
 **CTE 2**
 
-Calculate the average order amount.
+Calculate the average order amount from the completed orders in CTE 1.
 
-Then return orders whose amount is greater than the average.
+Then return orders whose amount is greater than the average completed-order amount.
 
 Return:
 
 - `order_id`
 - `customer_id`
 - `amount`
+
+### ✅ Solution — Question 18
+
+```sql
+WITH completed_order AS (
+    SELECT
+        order_id,
+        customer_id,
+        amount
+    FROM orders
+    WHERE status = 'Completed'
+),
+average_order AS (
+    SELECT
+        AVG(CAST(amount AS DECIMAL(18, 2))) AS avg_amount
+    FROM completed_order
+)
+SELECT
+    c.order_id,
+    c.customer_id,
+    c.amount
+FROM completed_order AS c
+CROSS JOIN average_order AS a
+WHERE c.amount > a.avg_amount;
+```
+
+**Concepts practiced:**
+
+- Creating multiple CTEs in a single `WITH` clause
+- Filtering completed orders inside the first CTE
+- Using `AVG()` to calculate the average completed-order amount
+- Using `CAST()` to specify decimal precision for the average calculation
+- Using `CROSS JOIN` to make the single average value available to each completed order
+- Filtering orders whose amount is greater than the average
+- Separating dataset preparation, aggregate calculation, and final filtering
 
 ---
 
@@ -1611,10 +1647,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 15. City Revenue Report         ✅
 ├── 16. High-Value Customer Identification ✅
 ├── 17. Compare Orders With Previous Order ✅
-└── 18–30                          ⬜
+├── 18. Large Orders vs Average Order  ✅
+└── 19–30                          ⬜
 ```
 
-**Progress: 17 / 30 completed**
+**Progress: 18 / 30 completed**
 
 ---
 
