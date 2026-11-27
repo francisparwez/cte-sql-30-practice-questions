@@ -138,3 +138,40 @@ FROM
     CROSS JOIN average_order a
 WHERE
     c.amount > a.avg_amount;
+
+-- 19. High-Spending Customers With Their Order Count
+-- Create:
+--     CTE 1
+--     Calculate customer spending.
+
+--     CTE 2
+--     Calculate customer order count.
+
+--     Then join the two CTEs.
+--     Finally return customers who spent more than 100,000.
+-- Return:
+--     customer_id
+--     total_spending
+--     order_count
+
+USE CTE_Practice_DB;
+
+WITH
+    customer_spending AS (
+        SELECT customer_id, SUM(amount) AS total_spending
+        FROM orders
+        GROUP BY
+            customer_id
+    ),
+    customer_order_count AS (
+        SELECT customer_id, COUNT(order_id) AS order_count
+        FROM orders
+        GROUP BY
+            customer_id
+    )
+SELECT cs.customer_id, cs.total_spending, coc.order_count
+FROM
+    customer_spending cs
+    JOIN customer_order_count coc ON cs.customer_id = coc.customer_id
+WHERE
+    cs.total_spending > 100000;

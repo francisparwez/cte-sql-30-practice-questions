@@ -32,7 +32,7 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 
 ### 📈 Current Progress
 
-**Beginner CTE Progress: 18 / 30 questions completed** 🎯
+**Beginner CTE Progress: 19 / 30 questions completed** 🎯
 
 - ✅ Question 1 — Find High-Value Orders
 - ✅ Question 2 — Find Completed Orders
@@ -52,7 +52,8 @@ The 30 questions are intentionally kept at beginner level while gradually increa
 - ✅ Question 16 — High-Value Customer Identification
 - ✅ Question 17 — Compare Each Order With Customer's Previous Order
 - ✅ Question 18 — Large Orders vs Average Order
-- ⬜ Questions 19–30 — Not yet completed
+- ✅ Question 19 — High-Spending Customers With Their Order Count
+- ⬜ Questions 20–30 — Not yet completed
 
 ---
 
@@ -1126,6 +1127,46 @@ Return:
 
 ---
 
+### ✅ Solution — Question 19
+
+```sql
+WITH customer_spending AS (
+    SELECT
+        customer_id,
+        SUM(amount) AS total_spending
+    FROM orders
+    GROUP BY customer_id
+),
+customer_order_count AS (
+    SELECT
+        customer_id,
+        COUNT(order_id) AS order_count
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT
+    cs.customer_id,
+    cs.total_spending,
+    coc.order_count
+FROM customer_spending AS cs
+JOIN customer_order_count AS coc
+    ON cs.customer_id = coc.customer_id
+WHERE cs.total_spending > 100000;
+```
+
+**Concepts practiced:**
+
+- Creating multiple CTEs in a single `WITH` clause
+- Calculating total spending per customer with `SUM()`
+- Counting orders per customer with `COUNT()`
+- Grouping each CTE by `customer_id`
+- Joining the two aggregated CTEs using `INNER JOIN`
+- Filtering customers whose total spending exceeds `100,000`
+- Returning customer-level spending and order-count metrics
+- Including all order statuses because the question does not specify a status filter
+
+---
+
 ### 20. Customer Performance Summary
 
 Create multiple CTEs:
@@ -1648,10 +1689,11 @@ The objective is to develop the habit of thinking about SQL as a **series of ana
 ├── 16. High-Value Customer Identification ✅
 ├── 17. Compare Orders With Previous Order ✅
 ├── 18. Large Orders vs Average Order  ✅
-└── 19–30                          ⬜
+├── 19. High-Spending Customers With Their Order Count ✅
+└── 20–30                          ⬜
 ```
 
-**Progress: 18 / 30 completed**
+**Progress: 19 / 30 completed**
 
 ---
 
